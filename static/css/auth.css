@@ -1,0 +1,12 @@
+/* Auth pages – complements Tailwind brand tokens */
+.field-input:focus {
+  outline: none;
+  border-color: #183b32;
+  box-shadow: 0 0 0 3px rgba(24, 59, 50, 0.15);
+}
+.field-input.field-error {
+  border-color: #ba1a1a;
+}
+.custom-checkbox {
+  accent-color: #183b32;
+}
