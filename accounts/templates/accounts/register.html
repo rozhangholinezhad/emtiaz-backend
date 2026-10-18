@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>ثبت‌نام</title>
+  <style>
+    body { font-family: Tahoma, sans-serif; max-width: 420px; margin: 40px auto; padding: 16px; }
+    label { display: block; margin-top: 12px; }
+    input { width: 100%; padding: 8px; box-sizing: border-box; }
+    .errorlist { color: #c00; list-style: none; padding: 0; }
+    button { margin-top: 16px; padding: 10px 20px; }
+  </style>
+</head>
+<body>
+  <h1>ثبت‌نام</h1>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">ثبت‌نام</button>
+  </form>
+  <p><a href="{% url 'accounts:login' %}">قبلاً ثبت‌نام کرده‌اید؟ ورود</a></p>
+</body>
+</html>

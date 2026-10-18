@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <title>پروفایل</title>
+  <style>
+    body { font-family: Tahoma, sans-serif; max-width: 520px; margin: 40px auto; padding: 16px; }
+    dt { font-weight: bold; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <h1>پروفایل کاربری</h1>
+  <dl>
+    <dt>شماره موبایل</dt><dd>{{ user_obj.phone }}</dd>
+    <dt>نام</dt><dd>{{ user_obj.first_name }}</dd>
+    <dt>نام خانوادگی</dt><dd>{{ user_obj.last_name }}</dd>
+    <dt>فعال</dt><dd>{{ user_obj.is_active|yesno:"بله,خیر" }}</dd>
+    <dt>کارمند</dt><dd>{{ user_obj.is_employee|yesno:"بله,خیر" }}</dd>
+    <dt>دسترسی ادمین</dt><dd>{{ user_obj.is_staff|yesno:"بله,خیر" }}</dd>
+    <dt>مجوز انتشار مقاله</dt><dd>{{ user_obj.can_publish_article|yesno:"بله,خیر" }}</dd>
+    <dt>مجوز مدیریت ملک</dt><dd>{{ user_obj.can_manage_property|yesno:"بله,خیر" }}</dd>
+  </dl>
+  <form method="post" action="{% url 'accounts:logout' %}">
+    {% csrf_token %}
+    <button type="submit">خروج</button>
+  </form>
+</body>
+</html>
