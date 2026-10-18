@@ -14,7 +14,7 @@ SECRET_KEY = "django-insecure-j!9fmm8()^xje^%e&g)a-0t@pb=rq=w4%nx$m4em=h_$^xp#j%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -48,16 +48,6 @@ ROOT_URLCONF = "config.urls"
 
 TEMPLATES = [
     {
-<<<<<<< HEAD
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-=======
         "BACKEND": "django.template.backends.django.DjangoTemplates",
         "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
@@ -66,7 +56,6 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
->>>>>>> 44d8d2ff8010c5c2e8331de832cb29c1e109c247
             ],
         },
     },
@@ -108,28 +97,17 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files
-STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-<<<<<<< HEAD
-# STATIC_URL = 'static/'
-STATIC_URL = '/static/'  
-
+# Static & media (local assets + optional project static/)
+STATIC_URL = "/static/"
 STATICFILES_DIRS = [
-    BASE_DIR / "assets", 
+    BASE_DIR / "assets",
+    BASE_DIR / "static",
 ]
+STATIC_ROOT = BASE_DIR / "static_cdn" / "static_root"
 
-STATIC_ROOT = BASE_DIR / "static_cdn" / "static_root"  
-
-MEDIA_URL = '/media/'
+MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "static_cdn" / "media_root"
-=======
->>>>>>> 44d8d2ff8010c5c2e8331de832cb29c1e109c247
+
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
