@@ -1,0 +1,19 @@
+{% load static %}
+<!doctype html>
+<html class="scroll-smooth" dir="rtl" lang="fa">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>{% block title %}مجموعه تخصصی املاک امتیاز | مرجع معاملات لوکس شمیرانات{% endblock %}</title>
+    {% block extra_head %}{% endblock %}
+  </head>
+  <body class="bg-surface text-on-surface antialiased selection:bg-white-dim selection:text-primary">
+    {% block navbar %}{% endblock %}
+
+    {% block content %}{% endblock content %}
+
+    {% block footer %}{% endblock %}
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

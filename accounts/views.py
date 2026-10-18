@@ -9,7 +9,7 @@ from .forms import UserLoginForm, UserRegistrationForm
 
 @require_http_methods(["GET", "POST"])
 def register_view(request):
-    """ثبت‌نام کاربر جدید."""
+    """ثبت‌نام کاربر جدید با شماره موبایل."""
     if request.user.is_authenticated:
         return redirect("accounts:profile")
 
@@ -25,24 +25,38 @@ def register_view(request):
 
 @require_http_methods(["GET", "POST"])
 def login_view(request):
-    """ورود کاربر با شماره موبایل."""
+    """ورود با شماره موبایل و پشتیبانی از «مرا به خاطر بسپار»."""
     if request.user.is_authenticated:
         return redirect("accounts:profile")
 
     form = UserLoginForm(request, data=request.POST or None)
+    next_url = request.POST.get("next") or request.GET.get("next") or ""
+
     if request.method == "POST" and form.is_valid():
         user = form.get_user()
         login(request, user)
-        messages.success(request, "با موفقیت وارد شدید.")
-        next_url = request.GET.get("next") or "accounts:profile"
-        return redirect(next_url)
 
-    return render(request, "accounts/login.html", {"form": form})
+        if request.POST.get("remember"):
+            # ۲ هفته
+            request.session.set_expiry(60 * 60 * 24 * 14)
+        else:
+            request.session.set_expiry(0)
+
+        messages.success(request, "با موفقیت وارد شدید.")
+        if next_url:
+            return redirect(next_url)
+        return redirect("accounts:profile")
+
+    return render(
+        request,
+        "accounts/login.html",
+        {"form": form, "next": next_url},
+    )
 
 
 @require_http_methods(["POST", "GET"])
 def logout_view(request):
-    """خروج کاربر."""
+    """خروج از حساب."""
     logout(request)
     messages.info(request, "از حساب کاربری خارج شدید.")
     return redirect("accounts:login")
@@ -50,5 +64,5 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    """نمایش پروفایل کاربر لاگین‌شده."""
+    """پروفایل کاربر لاگین‌شده."""
     return render(request, "accounts/profile.html", {"user_obj": request.user})
