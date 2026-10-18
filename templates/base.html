@@ -1,42 +1,22 @@
-<<<<<<< HEAD
-=======
 {% load static %}
->>>>>>> 44d8d2ff8010c5c2e8331de832cb29c1e109c247
 <!doctype html>
 <html class="scroll-smooth" dir="rtl" lang="fa">
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-<<<<<<< HEAD
-    <title>مجموعه تخصصی املاک امتیاز | مرجع معاملات لوکس شمیرانات</title>
-    {% include './_header.html' %}
-
+    <title>{% block title %}مجموعه تخصصی املاک امتیاز | مرجع معاملات لوکس شمیرانات{% endblock %}</title>
+    {% include "./_header.html" %}
+    {% block extra_head %}{% endblock %}
   </head>
   <body
     class="bg-surface text-on-surface antialiased selection:bg-white-dim selection:text-primary"
   >
-    {% include './includes/navbar.html' %}
-    
-    {% block content %}
-    
-    {% endblock content %}
+    {% include "./includes/navbar.html" %}
 
-    {% include './includes/footer.html' %}
+    {% block content %}{% endblock %}
 
-
-    {% include './_footer.html' %}
-=======
-    <title>{% block title %}مجموعه تخصصی املاک امتیاز | مرجع معاملات لوکس شمیرانات{% endblock %}</title>
-    {% block extra_head %}{% endblock %}
-  </head>
-  <body class="bg-surface text-on-surface antialiased selection:bg-white-dim selection:text-primary">
-    {% block navbar %}{% endblock %}
-
-    {% block content %}{% endblock content %}
-
-    {% block footer %}{% endblock %}
-
+    {% include "./includes/footer.html" %}
+    {% include "./_footer.html" %}
     {% block extra_js %}{% endblock %}
->>>>>>> 44d8d2ff8010c5c2e8331de832cb29c1e109c247
   </body>
 </html>
