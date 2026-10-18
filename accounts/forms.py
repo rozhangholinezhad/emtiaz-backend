@@ -1,30 +1,29 @@
 from django import forms
-from django.contrib.auth import authenticate
 from django.contrib.auth.forms import AuthenticationForm
 
 from .models import User
 
 
 class UserRegistrationForm(forms.ModelForm):
-    """فرم ثبت‌نام کاربر با شماره موبایل و رمز عبور."""
+    """فرم ثبت‌نام با شماره موبایل."""
 
     password1 = forms.CharField(
         label="رمز عبور",
+        min_length=8,
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control",
-                "placeholder": "رمز عبور",
+                "class": "field-input w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-sm",
+                "placeholder": "حداقل ۸ کاراکتر",
                 "autocomplete": "new-password",
             }
         ),
-        min_length=8,
         help_text="حداقل ۸ کاراکتر.",
     )
     password2 = forms.CharField(
         label="تکرار رمز عبور",
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control",
+                "class": "field-input w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-sm",
                 "placeholder": "تکرار رمز عبور",
                 "autocomplete": "new-password",
             }
@@ -42,17 +41,26 @@ class UserRegistrationForm(forms.ModelForm):
         widgets = {
             "phone": forms.TextInput(
                 attrs={
-                    "class": "form-control",
+                    "class": "field-input w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-sm",
                     "placeholder": "09123456789",
                     "dir": "ltr",
                     "inputmode": "numeric",
+                    "autocomplete": "tel",
                 }
             ),
             "first_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "نام"}
+                attrs={
+                    "class": "field-input w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-sm",
+                    "placeholder": "نام",
+                    "autocomplete": "given-name",
+                }
             ),
             "last_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "نام خانوادگی"}
+                attrs={
+                    "class": "field-input w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-sm",
+                    "placeholder": "نام خانوادگی",
+                    "autocomplete": "family-name",
+                }
             ),
         }
 
@@ -80,13 +88,13 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class UserLoginForm(AuthenticationForm):
-    """فرم ورود با شماره موبایل."""
+    """فرم ورود با شماره موبایل (فیلد username = phone)."""
 
     username = forms.CharField(
         label="شماره موبایل",
         widget=forms.TextInput(
             attrs={
-                "class": "form-control",
+                "class": "field-input w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-sm",
                 "placeholder": "09123456789",
                 "dir": "ltr",
                 "inputmode": "numeric",
@@ -98,8 +106,8 @@ class UserLoginForm(AuthenticationForm):
         label="رمز عبور",
         widget=forms.PasswordInput(
             attrs={
-                "class": "form-control",
-                "placeholder": "رمز عبور",
+                "class": "field-input w-full px-4 py-3 rounded-lg border border-brand-border bg-white text-sm tracking-wider",
+                "placeholder": "رمز عبور خود را وارد کنید",
                 "autocomplete": "current-password",
             }
         ),
