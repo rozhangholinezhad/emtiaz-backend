@@ -5,45 +5,71 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'css/blogs.css' %}" />
+<style>
+  .blog-card-img { aspect-ratio: 16 / 10; background: linear-gradient(135deg, #e8ebe8 0%, #d8dbd7 100%); }
+  .blog-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+</style>
 {% endblock %}
 
 {% block content %}
-<section class="py-16 md:py-20 max-w-[1320px] mx-auto px-6 md:px-12">
+<section class="py-12 md:py-16 max-w-[1320px] mx-auto px-6 md:px-12">
   <div class="text-center mb-12">
     <div class="inline-flex items-center gap-2 text-secondary mb-3">
       <span class="w-6 h-[2px] bg-secondary"></span>
-      <span class="text-sm font-bold">مجله تخصصی ملک</span>
+      <span class="text-sm font-bold tracking-wide">مجله تخصصی ملک</span>
     </div>
     <h1 class="text-3xl md:text-4xl font-extrabold text-primary tracking-tight mb-4">
-      دانش بیشتر، <span class="text-secondary">انتخاب بهتر</span>
+      دانش بیشتر، <span class="text-secondary relative inline-block">انتخاب بهتر</span>
     </h1>
-    <p class="text-on-surface-variant max-w-2xl mx-auto leading-relaxed">
+    <p class="text-on-surface-variant max-w-2xl mx-auto leading-relaxed text-sm md:text-base">
       مقالات کاربردی درباره خرید، اجاره و سرمایه‌گذاری ملکی در شمال تهران.
     </p>
   </div>
 
   {% if featured_post %}
   <div class="mb-14">
-    <h2 class="text-xl font-bold text-primary mb-6">مقاله منتخب تحریریه</h2>
-    <a href="{{ featured_post.get_absolute_url }}" class="block group rounded-xl overflow-hidden border border-outline/40 bg-surface shadow-sm hover:shadow-md transition-all">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-primary">مقاله منتخب تحریریه</h2>
+      <span class="text-sm text-secondary font-semibold flex items-center gap-1">
+        <span class="material-symbols-outlined text-lg">star</span>
+        ویژه
+      </span>
+    </div>
+    <a href="{{ featured_post.get_absolute_url }}" class="block group rounded-xl overflow-hidden border border-outline/40 bg-surface shadow-sm hover:shadow-lg transition-all">
       <div class="grid grid-cols-1 lg:grid-cols-2">
-        <div class="relative aspect-[16/10] lg:aspect-auto lg:min-h-[280px] bg-surface-container">
+        <div class="blog-card-img relative min-h-[220px] lg:min-h-[300px]">
           {% if featured_post.cover %}
-          <img src="{{ featured_post.cover }}" alt="{{ featured_post.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+          <img src="{{ featured_post.cover }}" alt="{{ featured_post.title }}"
+               class="group-hover:scale-105 transition-transform duration-500 ease-out"
+               loading="eager"
+               onerror="this.style.display='none'" />
+          {% else %}
+          <div class="w-full h-full flex items-center justify-center text-on-surface-variant/50">
+            <span class="material-symbols-outlined text-5xl">article</span>
+          </div>
           {% endif %}
         </div>
         <div class="p-6 md:p-8 flex flex-col justify-center text-right">
           {% if featured_post.category %}
           <span class="text-xs font-semibold text-secondary mb-2">{{ featured_post.category.name }}</span>
           {% endif %}
-          <h3 class="text-2xl font-bold text-primary mb-3 group-hover:text-secondary transition-colors">{{ featured_post.title }}</h3>
+          <h3 class="text-xl md:text-2xl font-bold text-primary mb-3 group-hover:text-secondary transition-colors leading-snug">
+            {{ featured_post.title }}
+          </h3>
+          {% if featured_post.excerpt %}
           <p class="text-on-surface-variant text-sm leading-relaxed mb-4 line-clamp-3">{{ featured_post.excerpt }}</p>
-          <div class="flex items-center gap-3 text-xs text-on-surface-variant">
+          {% endif %}
+          <div class="flex items-center gap-3 text-xs text-on-surface-variant mt-auto">
             {% if featured_post.published_at %}
-            <span>{{ featured_post.published_at|date:"j F Y" }}</span>
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm text-secondary">calendar_today</span>
+              {{ featured_post.published_at|date:"j F Y" }}
+            </span>
             {% endif %}
-            <span>·</span>
             <span>{{ featured_post.views_count }} بازدید</span>
+            <span class="text-primary font-semibold mr-auto">ادامه مطلب ←</span>
           </div>
         </div>
       </div>
@@ -52,16 +78,16 @@
   {% endif %}
 
   {% if categories %}
-  <div class="mb-10">
+  <div class="mb-8">
     <h2 class="text-lg font-bold text-primary mb-4">دسته‌بندی موضوعات تخصصی</h2>
     <div class="flex flex-wrap gap-2">
       <a href="{% url 'blog:post_list' %}"
-         class="px-3 py-1.5 rounded-full text-xs font-medium border {% if not active_category %}bg-primary text-white border-primary{% else %}bg-surface border-outline text-primary hover:border-secondary{% endif %}">
+         class="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors {% if not active_category %}bg-primary text-white border-primary{% else %}bg-surface border-outline/60 text-primary hover:border-secondary{% endif %}">
         همه
       </a>
       {% for cat in categories %}
       <a href="{% url 'blog:post_list' %}?category={{ cat.slug }}"
-         class="px-3 py-1.5 rounded-full text-xs font-medium border {% if active_category == cat.slug %}bg-primary text-white border-primary{% else %}bg-surface border-outline text-primary hover:border-secondary{% endif %}">
+         class="px-3 py-1.5 rounded-full text-xs font-medium border transition-colors {% if active_category == cat.slug %}bg-primary text-white border-primary{% else %}bg-surface border-outline/60 text-primary hover:border-secondary{% endif %}">
         {{ cat.name }}
       </a>
       {% endfor %}
@@ -69,38 +95,59 @@
   </div>
   {% endif %}
 
-  <form method="get" class="mb-10 max-w-md">
+  <form method="get" class="mb-10 max-w-md" role="search">
     {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}" />{% endif %}
     <div class="relative">
       <input type="search" name="q" value="{{ search_query }}" placeholder="جست‌وجو در مقالات..."
-             class="w-full h-11 rounded-lg border border-outline/60 pr-4 pl-10 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30" />
-      <button type="submit" class="absolute left-3 top-2.5 text-outline">🔍</button>
+             class="w-full h-11 rounded-lg border border-outline/60 bg-surface pr-4 pl-11 text-sm focus:outline-none focus:ring-2 focus:ring-secondary/30 focus:border-primary" />
+      <button type="submit" class="absolute left-3 top-1/2 -translate-y-1/2 text-outline hover:text-primary" aria-label="جستجو">
+        <span class="material-symbols-outlined text-[20px]">search</span>
+      </button>
     </div>
   </form>
 
   <h2 class="text-xl font-bold text-primary mb-6">آخرین مقالات</h2>
 
   {% if posts %}
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
     {% for post in posts %}
-    <article class="bg-surface rounded-xl border border-outline/40 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col group overflow-hidden">
-      <a href="{{ post.get_absolute_url }}" class="block">
-        <div class="relative aspect-[16/10] overflow-hidden bg-surface-container">
+    <article class="bg-surface rounded-xl border border-outline/40 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col group overflow-hidden h-full">
+      <a href="{{ post.get_absolute_url }}" class="flex flex-col h-full">
+        <div class="blog-card-img relative overflow-hidden">
           {% if post.cover %}
-          <img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="{{ post.cover }}" alt="{{ post.title }}" />
+          <img src="{{ post.cover }}" alt="{{ post.title }}"
+               class="group-hover:scale-105 transition-transform duration-500 ease-out"
+               loading="lazy"
+               onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'w-full h-full min-h-[160px] flex items-center justify-center text-on-surface-variant/40\'><span class=\'material-symbols-outlined text-4xl\'>image</span></div>';" />
+          {% else %}
+          <div class="w-full h-full min-h-[160px] flex items-center justify-center text-on-surface-variant/40">
+            <span class="material-symbols-outlined text-4xl">image</span>
+          </div>
           {% endif %}
           {% if post.category %}
-          <div class="absolute top-3 right-3 bg-surface/90 backdrop-blur-sm px-2.5 py-1 rounded border border-outline/70">
-            <span class="text-xs text-primary font-semibold">{{ post.category.name }}</span>
+          <div class="absolute top-3 right-3 bg-surface/95 backdrop-blur-sm px-2.5 py-1 rounded border border-outline/70 shadow-sm">
+            <span class="text-[11px] text-primary font-semibold">{{ post.category.name }}</span>
           </div>
           {% endif %}
         </div>
-        <div class="p-5 text-right">
-          <div class="flex items-center gap-2 text-xs text-on-surface-variant mb-2">
-            {% if post.published_at %}<span>{{ post.published_at|date:"j F Y" }}</span>{% endif %}
+        <div class="p-5 text-right flex flex-col flex-1">
+          <div class="flex items-center gap-2 text-[11px] text-on-surface-variant mb-2">
+            {% if post.published_at %}
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm text-secondary">calendar_today</span>
+              {{ post.published_at|date:"j F Y" }}
+            </span>
+            {% endif %}
+            <span class="text-outline">·</span>
+            <span>{{ post.views_count }} بازدید</span>
           </div>
-          <h3 class="text-base font-bold text-primary mb-2 line-clamp-2 group-hover:text-secondary transition-colors">{{ post.title }}</h3>
-          <p class="text-sm text-on-surface-variant line-clamp-3 leading-relaxed">{{ post.excerpt }}</p>
+          <h3 class="text-base font-bold text-primary mb-2 line-clamp-2 group-hover:text-secondary transition-colors leading-snug">
+            {{ post.title }}
+          </h3>
+          {% if post.excerpt %}
+          <p class="text-sm text-on-surface-variant line-clamp-3 leading-relaxed mb-3">{{ post.excerpt }}</p>
+          {% endif %}
+          <span class="text-xs font-semibold text-primary mt-auto">ادامه مطلب</span>
         </div>
       </a>
     </article>
@@ -108,18 +155,25 @@
   </div>
 
   {% if is_paginated %}
-  <nav class="mt-12 flex justify-center gap-2">
+  <nav class="mt-12 flex justify-center items-center gap-3" aria-label="صفحه‌بندی">
     {% if page_obj.has_previous %}
-    <a class="px-3 py-1.5 rounded border text-sm" href="?page={{ page_obj.previous_page_number }}{% if active_category %}&category={{ active_category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">قبلی</a>
+    <a class="px-4 py-2 rounded-lg border border-outline/60 text-sm hover:border-primary transition-colors"
+       href="?page={{ page_obj.previous_page_number }}{% if active_category %}&category={{ active_category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">قبلی</a>
     {% endif %}
-    <span class="px-3 py-1.5 text-sm text-on-surface-variant">صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>
+    <span class="text-sm text-on-surface-variant">صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>
     {% if page_obj.has_next %}
-    <a class="px-3 py-1.5 rounded border text-sm" href="?page={{ page_obj.next_page_number }}{% if active_category %}&category={{ active_category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">بعدی</a>
+    <a class="px-4 py-2 rounded-lg border border-outline/60 text-sm hover:border-primary transition-colors"
+       href="?page={{ page_obj.next_page_number }}{% if active_category %}&category={{ active_category }}{% endif %}{% if search_query %}&q={{ search_query }}{% endif %}">بعدی</a>
     {% endif %}
   </nav>
   {% endif %}
+
   {% else %}
-  <p class="text-center text-on-surface-variant py-16">هنوز مقاله‌ای منتشر نشده است.</p>
+  <div class="text-center py-20 rounded-xl border border-dashed border-outline/50 bg-surface/50">
+    <span class="material-symbols-outlined text-5xl text-outline mb-4 block">article</span>
+    <p class="text-on-surface-variant mb-2">هنوز مقاله‌ای برای نمایش وجود ندارد.</p>
+    <p class="text-xs text-outline">از پنل ادمین مقاله منتشر کنید یا دستور <code class="bg-surface-container px-1 rounded">python manage.py seed_blog</code> را اجرا کنید.</p>
+  </div>
   {% endif %}
 </section>
 {% endblock %}
