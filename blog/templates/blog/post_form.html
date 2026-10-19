@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{% if object %}ویرایش مقاله{% else %}مقاله جدید{% endif %} | املاک امتیاز{% endblock %}
+
+{% block content %}
+<section class="py-12 max-w-2xl mx-auto px-6">
+  <h1 class="text-2xl font-bold text-primary mb-6">{% if object %}ویرایش مقاله{% else %}ایجاد مقاله جدید{% endif %}</h1>
+  <form method="post" enctype="multipart/form-data" class="space-y-4 bg-surface p-6 rounded-xl border border-outline/40">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="text-red-600 text-sm">{{ form.non_field_errors }}</div>
+    {% endif %}
+    {% for field in form %}
+    <div>
+      <label class="block text-xs font-semibold mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<p class="text-red-600 text-xs mt-1">{{ field.errors.0 }}</p>{% endif %}
+      {% if field.help_text %}<p class="text-xs text-on-surface-variant mt-1">{{ field.help_text }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    <div class="flex gap-3 pt-2">
+      <button type="submit" class="h-11 px-6 rounded-lg bg-primary text-white text-sm font-medium">ذخیره</button>
+      <a href="{% url 'blog:post_list' %}" class="h-11 px-6 rounded-lg border text-sm flex items-center">انصراف</a>
+    </div>
+  </form>
+</section>
+{% endblock %}
