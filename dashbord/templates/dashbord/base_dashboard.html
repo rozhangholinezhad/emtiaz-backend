@@ -44,16 +44,16 @@
       <span class="material-symbols-outlined text-outline">real_estate_agent</span>
       <span class="text-sm">مدیریت املاک</span>
     </a>
-    <a href="{% url 'blog:post_list' %}" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
-      <span class="material-symbols-outlined text-outline">article</span>
+    <a href="{% url 'dashbord:blog_list' %}"
+       class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if active_nav == 'blog' %}bg-primary text-white font-bold shadow-sm{% else %}text-on-surface-variant hover:bg-surface-container{% endif %}">
+      <span class="material-symbols-outlined">article</span>
       <span class="text-sm">مدیریت مقالات</span>
     </a>
-    {% if u.can_publish_article or u.is_staff %}
-    <a href="{% url 'blog:post_create' %}" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
-      <span class="material-symbols-outlined text-outline">post_add</span>
-      <span class="text-sm">افزودن مقاله</span>
+    <a href="{% url 'dashbord:category_list' %}"
+       class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if active_nav == 'categories' %}bg-primary text-white font-bold shadow-sm{% else %}text-on-surface-variant hover:bg-surface-container{% endif %}">
+      <span class="material-symbols-outlined">category</span>
+      <span class="text-sm">دسته‌بندی مقالات</span>
     </a>
-    {% endif %}
     <a href="{% url 'dashbord:profile' %}"
        class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if active_nav == 'profile' %}bg-primary text-white font-bold shadow-sm{% else %}text-on-surface-variant hover:bg-surface-container{% endif %}">
       <span class="material-symbols-outlined">person</span>
