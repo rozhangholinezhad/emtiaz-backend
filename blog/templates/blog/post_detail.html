@@ -9,14 +9,14 @@
 
 {% block content %}
 <article class="py-12 md:py-16 max-w-[900px] mx-auto px-6 md:px-12">
-  <nav class="text-xs text-on-surface-variant mb-6">
+  <nav class="text-xs text-on-surface-variant mb-6 flex flex-wrap items-center gap-1">
     <a href="{% url 'blog:post_list' %}" class="hover:text-primary">مجله</a>
-    <span class="mx-1">/</span>
+    <span>/</span>
     {% if post.category %}
     <a href="{% url 'blog:post_list' %}?category={{ post.category.slug }}" class="hover:text-primary">{{ post.category.name }}</a>
-    <span class="mx-1">/</span>
+    <span>/</span>
     {% endif %}
-    <span class="text-primary">{{ post.title|truncatechars:40 }}</span>
+    <span class="text-primary">{{ post.title|truncatechars:48 }}</span>
   </nav>
 
   {% if post.category %}
@@ -30,7 +30,10 @@
     <span>نویسنده: {{ post.author.get_full_name|default:post.author.phone }}</span>
     {% endif %}
     {% if post.published_at %}
-    <span>{{ post.published_at|date:"j F Y" }}</span>
+    <span class="flex items-center gap-1">
+      <span class="material-symbols-outlined text-sm text-secondary">calendar_today</span>
+      {{ post.published_at|date:"j F Y" }}
+    </span>
     {% endif %}
     <span>{{ post.views_count }} بازدید</span>
     {% if user.is_authenticated and user.is_staff or user.is_authenticated and user.can_publish_article %}
@@ -39,8 +42,11 @@
   </div>
 
   {% if post.cover %}
-  <div class="rounded-xl overflow-hidden mb-10 border border-outline/30 editorial-shadow">
-    <img src="{{ post.cover }}" alt="{{ post.title }}" class="w-full max-h-[420px] object-cover" />
+  <div class="rounded-xl overflow-hidden mb-10 border border-outline/30 editorial-shadow bg-surface-container">
+    <img src="{{ post.cover }}" alt="{{ post.title }}"
+         class="w-full max-h-[420px] object-cover"
+         loading="eager"
+         onerror="this.parentElement.style.display='none'" />
   </div>
   {% endif %}
 
@@ -48,8 +54,12 @@
   <p class="text-lg text-on-surface-variant leading-relaxed mb-8 font-medium border-r-4 border-secondary pr-4">{{ post.excerpt }}</p>
   {% endif %}
 
-  <div class="prose prose-lg max-w-none text-on-surface leading-8 whitespace-pre-line">
+  <div class="max-w-none text-on-surface leading-8 whitespace-pre-line text-[15px] md:text-base">
     {{ post.content }}
+  </div>
+
+  <div class="mt-12 pt-6 border-t border-outline/30">
+    <a href="{% url 'blog:post_list' %}" class="text-sm font-semibold text-primary hover:text-secondary">→ بازگشت به فهرست مقالات</a>
   </div>
 </article>
 
@@ -58,12 +68,14 @@
   <h2 class="text-xl font-bold text-primary mb-6">مقالات مرتبط</h2>
   <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
     {% for item in related_posts %}
-    <a href="{{ item.get_absolute_url }}" class="block rounded-xl border border-outline/40 overflow-hidden hover:shadow-md transition-all bg-surface">
-      {% if item.cover %}
-      <div class="aspect-[16/10] overflow-hidden">
-        <img src="{{ item.cover }}" alt="{{ item.title }}" class="w-full h-full object-cover" />
+    <a href="{{ item.get_absolute_url }}" class="block rounded-xl border border-outline/40 overflow-hidden hover:shadow-md transition-all bg-surface group">
+      <div class="aspect-[16/10] overflow-hidden bg-surface-container">
+        {% if item.cover %}
+        <img src="{{ item.cover }}" alt="{{ item.title }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" onerror="this.style.display='none'" />
+        {% else %}
+        <div class="w-full h-full flex items-center justify-center text-outline"><span class="material-symbols-outlined text-3xl">image</span></div>
+        {% endif %}
       </div>
-      {% endif %}
       <div class="p-4 text-right">
         <h3 class="font-bold text-primary text-sm line-clamp-2">{{ item.title }}</h3>
       </div>
