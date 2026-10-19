@@ -1,0 +1,180 @@
+{% extends "dashbord/base_dashboard.html" %}
+
+{% block content %}
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative overflow-hidden">
+  <div class="absolute top-0 right-0 left-0 h-1 bg-gradient-to-l from-secondary via-secondary-container to-transparent"></div>
+  <div class="space-y-1">
+    <div class="flex items-center gap-3 flex-wrap">
+      <h2 class="text-xl md:text-2xl font-bold text-primary tracking-tight">
+        خوش آمدید، {{ request.user.get_full_name|default:request.user.phone }}
+      </h2>
+      <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">مرکز کنترل</span>
+    </div>
+    <p class="text-sm text-on-surface-variant">در این بخش می‌توانید وضعیت کلی محتوا و اطلاعات وب‌سایت را بررسی کنید.</p>
+  </div>
+  <div class="flex items-center gap-3 shrink-0 bg-surface-container-low px-4 py-2.5 rounded-lg border border-outline-variant/60">
+    <span class="material-symbols-outlined text-secondary">calendar_today</span>
+    <div class="text-right">
+      <p class="text-xs text-on-surface-variant">تاریخ روز</p>
+      <p class="text-sm text-primary font-bold">{{ today_display|date:"l، j F Y" }}</p>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="flex items-center justify-between mb-4">
+    <h3 class="text-base font-bold text-primary flex items-center gap-2">
+      <span class="w-2 h-2 rounded-full bg-secondary"></span>
+      خلاصه وضعیت سامانه
+    </h3>
+  </div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+    <div class="bg-surface-container-lowest p-5 rounded-lg border border-outline-variant shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs text-on-surface-variant">کل املاک</span>
+        <div class="w-9 h-9 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined">domain</span>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-primary mb-1">{{ stats.properties_total }}</div>
+      <div class="text-xs text-on-surface-variant">املاک ثبت‌شده</div>
+    </div>
+    <div class="bg-surface-container-lowest p-5 rounded-lg border border-outline-variant shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs text-on-surface-variant">املاک منتشرشده</span>
+        <div class="w-9 h-9 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined">check_circle</span>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-primary mb-1">{{ stats.properties_published }}</div>
+      <div class="text-xs text-on-surface-variant">قابل مشاهده در سایت</div>
+    </div>
+    <div class="bg-surface-container-lowest p-5 rounded-lg border border-outline-variant shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs text-on-surface-variant">مقالات</span>
+        <div class="w-9 h-9 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined">article</span>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-primary mb-1">{{ stats.posts_total }}</div>
+      <div class="text-xs text-on-surface-variant">{{ stats.posts_published }} منتشرشده</div>
+    </div>
+    <div class="bg-surface-container-lowest p-5 rounded-lg border border-outline-variant shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs text-on-surface-variant">دسته‌بندی‌ها</span>
+        <div class="w-9 h-9 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined">category</span>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-primary mb-1">{{ stats.categories_count }}</div>
+      <div class="text-xs text-on-surface-variant">موضوعات مقاله</div>
+    </div>
+    <div class="bg-surface-container-lowest p-5 rounded-lg border border-outline-variant shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs text-on-surface-variant">کاربران</span>
+        <div class="w-9 h-9 rounded-lg bg-surface-container-low text-primary flex items-center justify-center">
+          <span class="material-symbols-outlined">group</span>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-primary mb-1">{{ stats.users_count }}</div>
+      <div class="text-xs text-on-surface-variant">حساب‌های ثبت‌شده</div>
+    </div>
+    <div class="bg-surface-container-lowest p-5 rounded-lg border border-outline-variant shadow-sm">
+      <div class="flex items-center justify-between mb-3">
+        <span class="text-xs text-on-surface-variant">درخواست‌ها</span>
+        <div class="w-9 h-9 rounded-lg bg-surface-container-low text-secondary flex items-center justify-center">
+          <span class="material-symbols-outlined">mark_email_unread</span>
+        </div>
+      </div>
+      <div class="text-2xl font-bold text-secondary mb-1">{{ stats.contact_requests }}</div>
+      <div class="text-xs text-on-surface-variant">نیازمند بررسی</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h3 class="text-base font-bold text-primary flex items-center gap-2 mb-4">
+    <span class="w-2 h-2 rounded-full bg-secondary"></span>
+    دسترسی سریع
+  </h3>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <a href="/real_estate/" class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant shadow-sm hover:border-secondary hover:shadow-md transition-all flex items-center gap-3.5 group">
+      <div class="w-12 h-12 rounded-lg bg-primary-container text-white flex items-center justify-center">
+        <span class="material-symbols-outlined">add_home</span>
+      </div>
+      <div class="flex-1">
+        <h4 class="text-sm font-bold text-primary group-hover:text-secondary">افزودن ملک</h4>
+        <p class="text-xs text-on-surface-variant">ثبت اطلاعات یک ملک</p>
+      </div>
+    </a>
+    <a href="{% url 'blog:post_create' %}" class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant shadow-sm hover:border-secondary hover:shadow-md transition-all flex items-center gap-3.5 group">
+      <div class="w-12 h-12 rounded-lg bg-surface-container text-primary flex items-center justify-center border border-outline-variant">
+        <span class="material-symbols-outlined">post_add</span>
+      </div>
+      <div class="flex-1">
+        <h4 class="text-sm font-bold text-primary group-hover:text-secondary">افزودن مقاله</h4>
+        <p class="text-xs text-on-surface-variant">انتشار محتوای جدید</p>
+      </div>
+    </a>
+    <a href="{% url 'blog:post_list' %}" class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant shadow-sm hover:border-secondary hover:shadow-md transition-all flex items-center gap-3.5 group">
+      <div class="w-12 h-12 rounded-lg bg-surface-container text-primary flex items-center justify-center border border-outline-variant">
+        <span class="material-symbols-outlined">article</span>
+      </div>
+      <div class="flex-1">
+        <h4 class="text-sm font-bold text-primary group-hover:text-secondary">فهرست مقالات</h4>
+        <p class="text-xs text-on-surface-variant">مدیریت محتوای بلاگ</p>
+      </div>
+    </a>
+    <a href="{% url 'dashbord:profile' %}" class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant shadow-sm hover:border-secondary hover:shadow-md transition-all flex items-center gap-3.5 group">
+      <div class="w-12 h-12 rounded-lg bg-surface-container text-primary flex items-center justify-center border border-outline-variant">
+        <span class="material-symbols-outlined">person</span>
+      </div>
+      <div class="flex-1">
+        <h4 class="text-sm font-bold text-primary group-hover:text-secondary">پروفایل من</h4>
+        <p class="text-xs text-on-surface-variant">ویرایش اطلاعات حساب</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+  <div class="p-5 border-b border-outline-variant flex items-center justify-between">
+    <h3 class="text-base font-bold text-primary">آخرین مقالات</h3>
+    <a href="{% url 'blog:post_list' %}" class="text-xs font-bold text-secondary hover:text-primary">مشاهده همه</a>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-right text-sm">
+      <thead>
+        <tr class="bg-surface-container-low border-b border-outline-variant text-xs text-on-surface-variant">
+          <th class="py-3 px-4">عنوان</th>
+          <th class="py-3 px-4">دسته</th>
+          <th class="py-3 px-4">وضعیت</th>
+          <th class="py-3 px-4">تاریخ</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-outline-variant/60">
+        {% for post in recent_posts %}
+        <tr class="hover:bg-surface-container-low/40">
+          <td class="py-3 px-4 font-semibold">
+            <a href="{{ post.get_absolute_url }}" class="hover:text-secondary">{{ post.title|truncatechars:50 }}</a>
+          </td>
+          <td class="py-3 px-4 text-on-surface-variant">{{ post.category.name|default:"—" }}</td>
+          <td class="py-3 px-4">
+            {% if post.is_published %}
+            <span class="px-2 py-0.5 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">منتشرشده</span>
+            {% else %}
+            <span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600 border">پیش‌نویس</span>
+            {% endif %}
+          </td>
+          <td class="py-3 px-4 text-on-surface-variant">{{ post.created_at|date:"j F Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="py-8 text-center text-on-surface-variant">مقاله‌ای ثبت نشده است.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}
