@@ -45,8 +45,14 @@
             <span class="line-clamp-1">{{ post.title }}</span>
             {% if post.is_featured %}<span class="text-[10px] text-secondary font-bold">منتخب</span>{% endif %}
           </td>
-          <td class="py-3 px-4 text-on-surface-variant">{{ post.category.name|default:"—" }}</td>
-          <td class="py-3 px-4 text-on-surface-variant text-xs">{{ post.author.get_full_name|default:post.author.phone|default:"—" }}</td>
+          <td class="py-3 px-4 text-on-surface-variant">{% if post.category %}{{ post.category.name }}{% else %}—{% endif %}</td>
+          <td class="py-3 px-4 text-on-surface-variant text-xs">
+            {% if post.author %}
+              {{ post.author.get_full_name|default:post.author.phone }}
+            {% else %}
+              —
+            {% endif %}
+          </td>
           <td class="py-3 px-4">
             {% if post.is_published %}
             <span class="px-2 py-0.5 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">منتشرشده</span>
