@@ -1,0 +1,96 @@
+{% extends "dashbord/base_dashboard.html" %}
+
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+  <div>
+    <h2 class="text-xl font-bold text-primary">مدیریت مقالات</h2>
+    <p class="text-sm text-on-surface-variant mt-1">ایجاد، ویرایش و حذف مقالات وبلاگ</p>
+  </div>
+  <a href="{% url 'dashbord:blog_create' %}"
+     class="inline-flex items-center gap-2 h-11 px-5 rounded-lg bg-primary text-white text-sm font-medium hover:opacity-90 shadow-sm">
+    <span class="material-symbols-outlined text-lg">add</span>
+    مقاله جدید
+  </a>
+</div>
+
+<form method="get" class="flex flex-wrap gap-3 mb-6">
+  <input type="search" name="q" value="{{ search_query }}" placeholder="جستجو عنوان..."
+         class="h-10 rounded-lg border border-outline-variant px-3 text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-secondary/30" />
+  <select name="status" class="h-10 rounded-lg border border-outline-variant px-3 text-sm">
+    <option value="" {% if not status_filter %}selected{% endif %}>همه وضعیت‌ها</option>
+    <option value="published" {% if status_filter == "published" %}selected{% endif %}>منتشرشده</option>
+    <option value="draft" {% if status_filter == "draft" %}selected{% endif %}>پیش‌نویس</option>
+  </select>
+  <button type="submit" class="h-10 px-4 rounded-lg border border-outline-variant text-sm hover:bg-surface-container">اعمال</button>
+</form>
+
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+  <div class="overflow-x-auto">
+    <table class="w-full text-right text-sm">
+      <thead>
+        <tr class="bg-surface-container-low border-b border-outline-variant text-xs text-on-surface-variant">
+          <th class="py-3 px-4">عنوان</th>
+          <th class="py-3 px-4">دسته</th>
+          <th class="py-3 px-4">نویسنده</th>
+          <th class="py-3 px-4">وضعیت</th>
+          <th class="py-3 px-4">بازدید</th>
+          <th class="py-3 px-4">تاریخ</th>
+          <th class="py-3 px-4 text-center">عملیات</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-outline-variant/60">
+        {% for post in posts %}
+        <tr class="hover:bg-surface-container-low/40">
+          <td class="py-3 px-4 font-semibold max-w-[220px]">
+            <span class="line-clamp-1">{{ post.title }}</span>
+            {% if post.is_featured %}<span class="text-[10px] text-secondary font-bold">منتخب</span>{% endif %}
+          </td>
+          <td class="py-3 px-4 text-on-surface-variant">{{ post.category.name|default:"—" }}</td>
+          <td class="py-3 px-4 text-on-surface-variant text-xs">{{ post.author.get_full_name|default:post.author.phone|default:"—" }}</td>
+          <td class="py-3 px-4">
+            {% if post.is_published %}
+            <span class="px-2 py-0.5 rounded-full text-xs bg-emerald-50 text-emerald-700 border border-emerald-200">منتشرشده</span>
+            {% else %}
+            <span class="px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-600 border">پیش‌نویس</span>
+            {% endif %}
+          </td>
+          <td class="py-3 px-4 text-on-surface-variant">{{ post.views_count }}</td>
+          <td class="py-3 px-4 text-on-surface-variant text-xs">{{ post.created_at|date:"Y/m/d" }}</td>
+          <td class="py-3 px-4">
+            <div class="flex items-center justify-center gap-1">
+              <a href="{{ post.get_absolute_url }}" target="_blank" class="p-1.5 rounded hover:bg-surface-container text-outline" title="مشاهده">
+                <span class="material-symbols-outlined text-lg">visibility</span>
+              </a>
+              <a href="{% url 'dashbord:blog_update' post.pk %}" class="p-1.5 rounded hover:bg-surface-container text-primary" title="ویرایش">
+                <span class="material-symbols-outlined text-lg">edit</span>
+              </a>
+              <a href="{% url 'dashbord:blog_delete' post.pk %}" class="p-1.5 rounded hover:bg-red-50 text-red-600" title="حذف">
+                <span class="material-symbols-outlined text-lg">delete</span>
+              </a>
+            </div>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="py-12 text-center text-on-surface-variant">
+            مقاله‌ای نیست.
+            <a href="{% url 'dashbord:blog_create' %}" class="text-primary font-semibold">اولین مقاله را بسازید</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% if is_paginated %}
+  <div class="p-4 border-t border-outline-variant flex justify-center gap-3 text-sm">
+    {% if page_obj.has_previous %}
+    <a href="?page={{ page_obj.previous_page_number }}&q={{ search_query }}&status={{ status_filter }}" class="px-3 py-1 border rounded">قبلی</a>
+    {% endif %}
+    <span class="text-on-surface-variant">{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</span>
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}&q={{ search_query }}&status={{ status_filter }}" class="px-3 py-1 border rounded">بعدی</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

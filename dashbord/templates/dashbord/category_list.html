@@ -1,0 +1,48 @@
+{% extends "dashbord/base_dashboard.html" %}
+
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+  <div class="lg:col-span-2">
+    <h2 class="text-xl font-bold text-primary mb-4">دسته‌بندی مقالات</h2>
+    <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+      <table class="w-full text-right text-sm">
+        <thead>
+          <tr class="bg-surface-container-low border-b text-xs text-on-surface-variant">
+            <th class="py-3 px-4">نام</th>
+            <th class="py-3 px-4">اسلاگ</th>
+            <th class="py-3 px-4 text-center">حذف</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-outline-variant/60">
+          {% for cat in categories %}
+          <tr>
+            <td class="py-3 px-4 font-semibold">{{ cat.name }}</td>
+            <td class="py-3 px-4 text-on-surface-variant" dir="ltr">{{ cat.slug }}</td>
+            <td class="py-3 px-4 text-center">
+              <a href="{% url 'dashbord:category_delete' cat.pk %}" class="text-red-600 text-xs font-semibold hover:underline"
+                 onclick="return confirm('حذف این دسته؟');">حذف</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="py-8 text-center text-on-surface-variant">دسته‌ای ثبت نشده.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="text-base font-bold text-primary mb-4">افزودن دسته جدید</h3>
+    <form method="post" action="{% url 'dashbord:category_create' %}" class="bg-surface-container-lowest rounded-xl border border-outline-variant p-5 space-y-4 shadow-sm">
+      {% csrf_token %}
+      {% for field in form %}
+      <div>
+        <label class="block text-xs font-semibold mb-1">{{ field.label }}</label>
+        {{ field }}
+      </div>
+      {% endfor %}
+      <button type="submit" class="w-full h-11 rounded-lg bg-primary text-white text-sm font-medium">ایجاد دسته</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

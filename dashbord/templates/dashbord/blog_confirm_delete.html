@@ -1,0 +1,18 @@
+{% extends "dashbord/base_dashboard.html" %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+  <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-8 text-center">
+    <span class="material-symbols-outlined text-5xl text-red-500 mb-4">warning</span>
+    <h2 class="text-lg font-bold text-primary mb-2">حذف مقاله</h2>
+    <p class="text-sm text-on-surface-variant mb-6">
+      آیا از حذف «{{ object.title }}» مطمئن هستید؟ این عمل قابل بازگشت نیست.
+    </p>
+    <form method="post" class="flex justify-center gap-3">
+      {% csrf_token %}
+      <button type="submit" class="h-11 px-6 rounded-lg bg-red-600 text-white text-sm font-medium">بله، حذف شود</button>
+      <a href="{% url 'dashbord:blog_list' %}" class="h-11 px-6 rounded-lg border border-outline-variant text-sm flex items-center">انصراف</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
