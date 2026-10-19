@@ -11,14 +11,14 @@ from .forms import UserLoginForm, UserRegistrationForm
 def register_view(request):
     """ثبت‌نام کاربر جدید با شماره موبایل."""
     if request.user.is_authenticated:
-        return redirect("accounts:profile")
+        return redirect("dashbord:home")
 
     form = UserRegistrationForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         user = form.save()
         login(request, user)
         messages.success(request, "ثبت‌نام با موفقیت انجام شد.")
-        return redirect("accounts:profile")
+        return redirect("dashbord:home")
 
     return render(request, "accounts/register.html", {"form": form})
 
@@ -27,7 +27,7 @@ def register_view(request):
 def login_view(request):
     """ورود با شماره موبایل و پشتیبانی از «مرا به خاطر بسپار»."""
     if request.user.is_authenticated:
-        return redirect("accounts:profile")
+        return redirect("dashbord:home")
 
     form = UserLoginForm(request, data=request.POST or None)
     next_url = request.POST.get("next") or request.GET.get("next") or ""
@@ -37,7 +37,6 @@ def login_view(request):
         login(request, user)
 
         if request.POST.get("remember"):
-            # ۲ هفته
             request.session.set_expiry(60 * 60 * 24 * 14)
         else:
             request.session.set_expiry(0)
@@ -45,7 +44,7 @@ def login_view(request):
         messages.success(request, "با موفقیت وارد شدید.")
         if next_url:
             return redirect(next_url)
-        return redirect("accounts:profile")
+        return redirect("dashbord:home")
 
     return render(
         request,
@@ -64,5 +63,5 @@ def logout_view(request):
 
 @login_required
 def profile_view(request):
-    """پروفایل کاربر لاگین‌شده."""
-    return render(request, "accounts/profile.html", {"user_obj": request.user})
+    """پروفایل — هدایت به داشبورد."""
+    return redirect("dashbord:profile")
