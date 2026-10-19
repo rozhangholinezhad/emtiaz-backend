@@ -1,0 +1,53 @@
+{% extends "dashbord/base_dashboard.html" %}
+
+{% block content %}
+<div class="max-w-xl">
+  <div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-6 md:p-8">
+    <div class="flex items-center gap-4 mb-8 pb-6 border-b border-outline-variant/50">
+      <div class="w-16 h-16 rounded-full bg-primary-container text-white flex items-center justify-center text-xl font-bold ring-4 ring-secondary/20">
+        {{ request.user.first_name|default:request.user.phone|slice:":1" }}{{ request.user.last_name|default:""|slice:":1" }}
+      </div>
+      <div>
+        <h2 class="text-xl font-bold text-primary">{{ request.user.get_full_name|default:"کاربر" }}</h2>
+        <p class="text-sm text-on-surface-variant" dir="ltr">{{ request.user.phone }}</p>
+        <p class="text-xs text-secondary mt-1">
+          {% if request.user.is_staff %}مدیر سیستم
+          {% elif request.user.is_employee %}کارمند
+          {% else %}کاربر عادی{% endif %}
+        </p>
+      </div>
+    </div>
+
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      {% for field in form %}
+      <div>
+        <label class="block text-xs font-semibold mb-1.5" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<p class="text-xs text-red-600 mt-1">{{ field.errors.0 }}</p>{% endif %}
+      </div>
+      {% endfor %}
+
+      <div class="grid grid-cols-2 gap-3 pt-2 text-xs text-on-surface-variant">
+        <div class="rounded-lg border border-outline-variant/50 p-3">
+          <span class="block text-[10px] mb-1">مجوز انتشار مقاله</span>
+          <span class="font-bold {% if request.user.can_publish_article %}text-emerald-600{% else %}text-outline{% endif %}">
+            {% if request.user.can_publish_article %}فعال{% else %}غیرفعال{% endif %}
+          </span>
+        </div>
+        <div class="rounded-lg border border-outline-variant/50 p-3">
+          <span class="block text-[10px] mb-1">مجوز مدیریت ملک</span>
+          <span class="font-bold {% if request.user.can_manage_property %}text-emerald-600{% else %}text-outline{% endif %}">
+            {% if request.user.can_manage_property %}فعال{% else %}غیرفعال{% endif %}
+          </span>
+        </div>
+      </div>
+
+      <div class="flex gap-3 pt-4">
+        <button type="submit" class="h-11 px-6 rounded-lg bg-primary text-white text-sm font-medium hover:opacity-90">ذخیره تغییرات</button>
+        <a href="{% url 'dashbord:home' %}" class="h-11 px-6 rounded-lg border border-outline-variant text-sm flex items-center">بازگشت</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

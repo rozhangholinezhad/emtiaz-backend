@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>{% block title %}{{ page_title|default:"داشبورد" }} | املاک امتیاز{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}"/>
+  <link rel="stylesheet" href="{% static 'responsive.css' %}"/>
+  <script src="{% static 'js/tailwind-config.js' %}"></script>
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-surface text-on-surface min-h-screen flex flex-col selection:bg-secondary selection:text-on-secondary">
+{% with u=request.user %}
+<aside class="fixed top-0 right-0 h-screen w-72 z-40 bg-surface-container-lowest border-l border-outline-variant shadow-sm flex flex-col justify-between hidden lg:flex">
+  <div class="p-6 border-b border-outline-variant/40">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-primary-container text-white flex items-center justify-center shadow-sm">
+          <span class="material-symbols-outlined">domain</span>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold text-primary tracking-tight">املاک امتیاز</h1>
+          <p class="text-xs text-on-surface-variant">سامانه مدیریت جامع</p>
+        </div>
+      </div>
+      <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-secondary-container text-on-secondary-container border border-secondary/30">پنل مدیریت</span>
+    </div>
+  </div>
+
+  <div class="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+    <a href="{% url 'dashbord:home' %}"
+       class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if active_nav == 'dashboard' %}bg-primary text-white font-bold shadow-sm{% else %}text-on-surface-variant hover:bg-surface-container{% endif %}">
+      <span class="material-symbols-outlined" {% if active_nav == 'dashboard' %}style="font-variation-settings: 'FILL' 1;"{% endif %}>dashboard</span>
+      <span class="text-sm flex-1">داشبورد</span>
+      {% if active_nav == 'dashboard' %}<span class="w-1.5 h-4 rounded-full bg-secondary"></span>{% endif %}
+    </a>
+    <a href="/real_estate/" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+      <span class="material-symbols-outlined text-outline">real_estate_agent</span>
+      <span class="text-sm">مدیریت املاک</span>
+    </a>
+    <a href="{% url 'blog:post_list' %}" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+      <span class="material-symbols-outlined text-outline">article</span>
+      <span class="text-sm">مدیریت مقالات</span>
+    </a>
+    {% if u.can_publish_article or u.is_staff %}
+    <a href="{% url 'blog:post_create' %}" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+      <span class="material-symbols-outlined text-outline">post_add</span>
+      <span class="text-sm">افزودن مقاله</span>
+    </a>
+    {% endif %}
+    <a href="{% url 'dashbord:profile' %}"
+       class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors {% if active_nav == 'profile' %}bg-primary text-white font-bold shadow-sm{% else %}text-on-surface-variant hover:bg-surface-container{% endif %}">
+      <span class="material-symbols-outlined">person</span>
+      <span class="text-sm">پروفایل من</span>
+    </a>
+    {% if u.is_staff %}
+    <a href="/admin/" class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container rounded-lg transition-colors">
+      <span class="material-symbols-outlined text-outline">settings</span>
+      <span class="text-sm">پنل ادمین Django</span>
+    </a>
+    {% endif %}
+  </div>
+
+  <div class="p-4 border-t border-outline-variant/40 bg-surface-container-low/50">
+    <div class="flex items-center gap-3 p-2 rounded-lg bg-surface-container-lowest border border-outline-variant/60 shadow-sm mb-3">
+      <div class="w-9 h-9 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs ring-2 ring-secondary/30">
+        {{ u.first_name|default:u.phone|slice:":1" }}{{ u.last_name|default:""|slice:":1" }}
+      </div>
+      <div class="flex-1 overflow-hidden">
+        <p class="text-sm font-semibold text-on-surface truncate">{{ u.get_full_name|default:u.phone }}</p>
+        <p class="text-xs text-secondary">
+          {% if u.is_staff %}مدیر{% elif u.is_employee %}کارمند{% else %}کاربر{% endif %}
+        </p>
+      </div>
+    </div>
+    <div class="flex items-center justify-between text-xs pt-1">
+      <a class="flex items-center gap-1.5 text-on-surface-variant hover:text-primary py-1 px-2 rounded" href="{% url 'core:home' %}">
+        <span class="material-symbols-outlined text-sm">home</span>
+        <span>سایت</span>
+      </a>
+      <a class="flex items-center gap-1.5 text-red-600 hover:bg-red-50 py-1 px-2 rounded" href="{% url 'accounts:logout' %}">
+        <span class="material-symbols-outlined text-sm">logout</span>
+        <span>خروج</span>
+      </a>
+    </div>
+  </div>
+</aside>
+{% endwith %}
+
+<header class="sticky top-0 z-30 w-full bg-surface-container-lowest border-b border-outline-variant shadow-sm lg:mr-72 flex items-center justify-between h-16 px-4 md:px-8">
+  <div class="flex items-center gap-3">
+    <div class="flex items-center gap-2 text-sm text-on-surface-variant">
+      <span>{{ breadcrumb|default:"داشبورد" }}</span>
+      <span class="text-outline-variant">/</span>
+      <span class="text-primary font-bold">{{ page_title|default:"نمای کلی" }}</span>
+    </div>
+  </div>
+  <div class="flex items-center gap-3">
+    <a href="{% url 'core:home' %}" class="hidden sm:inline-flex text-xs text-on-surface-variant hover:text-primary">مشاهده سایت</a>
+    <a href="{% url 'dashbord:profile' %}" class="flex items-center gap-2 p-1 rounded-lg hover:bg-surface-container">
+      <div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs">
+        {{ request.user.first_name|default:request.user.phone|slice:":1" }}
+      </div>
+      <span class="hidden md:block text-xs font-semibold">{{ request.user.get_full_name|default:request.user.phone }}</span>
+    </a>
+  </div>
+</header>
+
+<main class="lg:mr-72 flex-1 p-4 md:p-8 space-y-8">
+  {% if messages %}
+  <div class="space-y-2">
+    {% for message in messages %}
+    <div class="rounded-lg px-4 py-3 text-sm border {% if message.tags == 'error' %}bg-red-50 border-red-200 text-red-700{% else %}bg-emerald-50 border-emerald-200 text-emerald-800{% endif %}">
+      {{ message }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="lg:mr-72 py-6 px-4 md:px-8 border-t border-outline-variant bg-surface-container-lowest text-on-surface-variant">
+  <p class="text-xs text-center sm:text-right">سامانه مدیریت مجتمع تخصصی املاک امتیاز © ۱۴۰۵</p>
+</footer>
+</body>
+</html>
